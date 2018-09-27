@@ -1,0 +1,42 @@
+{
+  "websiteUrl": "http://localhost:8080",
+  "log": {
+    "console": {
+      "level": "info",
+      "timestamp": true,
+      "colorize": true
+    }
+  },
+  "redis": {
+    "url": "redis://50.116.20.146:6379",
+    "expireTime": 1440
+  },
+  "pagination": {
+    "pageSize": 20
+  },
+  "port": "3000",
+  "privateKey": "ILOVEPOTATOS",
+  "db": {
+    "development": {
+      "username": "root",
+      "password": null,
+      "database": "devcouch_dev",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "test": {
+      "username": "root",
+      "password": null,
+      "database": "devcouch_test",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "production": {
+      "username": "root",
+      "password": null,
+      "database": "devcouch_production",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    }
+  }
+}

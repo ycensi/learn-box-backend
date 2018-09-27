@@ -1,0 +1,13 @@
+{
+    "editor.formatOnSave": true,
+    "javascript.format.enable": false,
+    "prettier.eslintIntegration": true,
+    "editor.tabSize": 2,
+    "jshint.options": {
+        "esversion": 6,
+        "node": true,
+        "jquery": false,
+        "browser": false,
+    },
+    "jshint.enable": false
+}
