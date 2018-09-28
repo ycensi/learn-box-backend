@@ -13,6 +13,8 @@ export const signup = (req, res, next) => {
     .then(user => {
 
       var {
+        id,
+        name,
         username,
         email,
         location
@@ -24,6 +26,11 @@ export const signup = (req, res, next) => {
         location
       });
       res.json({
+        id,
+        username,
+        name,
+        email,
+        location,
         token
       });
     })
