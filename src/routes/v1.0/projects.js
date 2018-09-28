@@ -28,7 +28,7 @@ export const like = asyncMiddleware(async (req, res, next) => {
 
   try {
     const project = await models.Project.findById(id);
-    const result = project.addLikes(UserId);
+    project.addLikes(UserId);
     res.sendStatus(200);
   } catch (err) {
     next(err);
@@ -59,7 +59,7 @@ export const follow = asyncMiddleware(async (req, res, next) => {
 
   try {
     const project = await models.Project.findById(id);
-    const result = project.addFollowers(UserId);
+    project.addFollowers(UserId);
     res.sendStatus(200);
   } catch (err) {
     next(err);
