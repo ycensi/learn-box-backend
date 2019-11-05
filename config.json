@@ -19,22 +19,22 @@
   "db": {
     "development": {
       "username": "root",
-      "password": null,
-      "database": "devcouch_dev",
+      "password": "asd123asd",
+      "database": "learn_box_dev",
       "host": "127.0.0.1",
       "dialect": "mysql"
     },
     "test": {
       "username": "root",
-      "password": null,
-      "database": "devcouch_test",
+      "password": "asd123asd",
+      "database": "learn_box_test",
       "host": "127.0.0.1",
       "dialect": "mysql"
     },
     "production": {
       "username": "root",
-      "password": null,
-      "database": "devcouch_production",
+      "password": "asd123asd",
+      "database": "learn_box_production",
       "host": "127.0.0.1",
       "dialect": "mysql"
     }

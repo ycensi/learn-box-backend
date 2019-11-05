@@ -1,98 +1,81 @@
-var path = require('path');
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
-var clean = require('gulp-rimraf');
-var babel = require('gulp-babel');
-var debug = require('gulp-debug');
-var pm2 = require('pm2');
+var path = require("path");
+var gulp = require("gulp");
+//var runSequence = require('run-sequence');
+var clean = require("gulp-rimraf");
+var babel = require("gulp-babel");
+var debug = require("gulp-debug");
+var pm2 = require("pm2");
 
-require('@babel/register');
+require("@babel/register");
 
-var paths = {
-  src: ['src/**/*.js'],
-  test: ['src/**/test*.js'],
-  build: 'build'
+const paths = {
+  src: ["src/**/*.js"],
+  test: ["src/**/test*.js"],
+  build: "build"
 };
 
-gulp.task('default', function (done) {
-  runSequence(
-    'build',
-    'watch',
-    'run',
-    done
-  );
-});
+function buildCode() {
+  return gulp
+    .src(paths.src)
+    .pipe(babel())
+    .on("error", handleError)
+    .pipe(gulp.dest(paths.build));
+}
+
+function copyAssets() {
+  return gulp
+    .src([
+      "./package.json",
+      "./src/**/*.html",
+      "./src/**/*.json",
+      "./src/**/*.sql"
+    ])
+    .pipe(debug())
+    .pipe(gulp.dest("build/"));
+}
+
+function restartPm2() {
+  pm2.connect(true, function() {
+    pm2.restart("all", function() {
+      console.log("pm2 restart");
+    });
+  });
+}
 
 function handleError(error) {
   console.log(error.toString());
-  this.emit('end');
+  this.emit("end");
 }
 
-gulp.task('build:code', function () {
-  return gulp.src(paths.src)
-    .pipe(babel())
-    .on('error', handleError)
-    .pipe(gulp.dest(paths.build));
-});
+gulp.task("build:production", () =>
+  gulp.series("clean", "build:code", "cp:assets", function(done) {
+    done();
+  })
+);
 
-gulp.task('build:production', function (done) {
-  runSequence(
-    'clean',
-    'build:code',
-    'cp:assets',
-    done
-  );
-});
-
-gulp.task('build', function (done) {
-  runSequence(
-    'build:code',
-    'cp:assets',
-    done
-  );
-});
-
-gulp.task('clean', function () {
-  return gulp.src(['build/*', 'coverage'], {
+gulp.task("clean", function() {
+  return gulp
+    .src(["build/*", "coverage"], {
       read: false
     })
     .pipe(clean());
 });
 
-gulp.task('cp:assets', function () {
-  return gulp.src([
-      './package.json', './src/**/*.html', './src/**/*.json', './src/**/*.sql'
-    ])
-    .pipe(debug())
-    .pipe(gulp.dest('build/'));
+gulp.task("build:restart", gulp.series(buildCode, restartPm2));
+
+gulp.task("watch", function() {
+  gulp.watch(paths.src, gulp.series(buildCode, restartPm2));
 });
 
-gulp.task('build:restart', function (done) {
-  runSequence(
-    'build:code',
-    'pm2:restart',
-    done
-  );
-});
-
-gulp.task('watch', function () {
-  gulp.watch(paths.src, ['build:restart']);
-});
-
-gulp.task('pm2:restart', function () {
-  pm2.connect(true, function () {
-    pm2.restart('all', function () {
-      console.log('pm2 restart');
+gulp.task("run", function() {
+  pm2.connect(true, function() {
+    var pm2Config = require("./pm2.json");
+    pm2.start(pm2Config, function() {
+      console.log("pm2 started");
+      pm2.streamLogs("all", 0);
     });
   });
 });
 
-gulp.task('run', function () {
-  pm2.connect(true, function () {
-    var pm2Config = require('./pm2.json');
-    pm2.start(pm2Config, function () {
-      console.log('pm2 started');
-      pm2.streamLogs('all', 0);
-    });
-  });
-});
+gulp.task("build", gulp.series(buildCode, copyAssets));
+gulp.task("default", gulp.series("build", "watch", "run"));

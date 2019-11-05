@@ -1,0 +1,62 @@
+@url = http://localhost:3000/api/v1.0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6Ill1cmkgUm9iZXJ0IENlbnNpIiwicm9sZSI6InN0dWRlbnQiLCJ1c2VybmFtZSI6InljZW5zaSIsImlhdCI6MTU3Mjk4NjY5MX0.zoA6nsuKlrk807JsumMoGiZsQTb_mB4cr6KVXK8R4Qs
+
+GET {{url}}
+
+### Sign up
+POST {{url}}/signup
+content-type: application/json
+
+{
+  "name": "Yuri Robert Censi",
+  "username": "ycensi",
+  "password": "asd123asd"
+}
+
+### Login
+POST {{url}}/login
+content-type: application/json
+
+{
+  "username": "ycensi",
+  "password": "asd123asd"
+}
+
+### Courses
+GET {{url}}/course/all
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+### User Courses
+GET {{url}}/course/my-courses
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+
+### Join Course
+POST {{url}}/course/1/join
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{}
+
+### Leave Course
+POST {{url}}/course/1/leave
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{}
+
+### Change Current Lesson
+POST {{url}}/course/1/current-lesson
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "currentLesson": 0
+}
